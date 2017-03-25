@@ -48,7 +48,6 @@ func (self *Classpath) ReadClass(className string) ([]byte, error) {
 	if data, _, err := self.extension.ReadClass(className); err == nil {
 		return data, nil
 	}
-
 	if data, _, err := self.application.ReadClass(className); err == nil {
 		return data, nil
 	}
