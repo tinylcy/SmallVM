@@ -6,16 +6,16 @@ type StackMapTable struct {
 	attributeNameIndex   uint16
 	attributeLength      uint32
 	numberOfEntries      uint16
-	atackMapFrameEntries []StackMapFrame
+	stackMapFrameEntries []StackMapFrame
 }
 
 type StackMapFrame struct {
 }
 
-func NewStackMapTable() *StackMapTable {
-	return &StackMapTable{}
+func NewStackMapTable(nameIndex uint16) *StackMapTable {
+	return &StackMapTable{attributeNameIndex: nameIndex}
 }
 
 func (self *StackMapTable) readInfo(reader *reader.ClassReader) {
-
+	panic("Fail to read StackMapTable info!")
 }

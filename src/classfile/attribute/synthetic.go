@@ -7,10 +7,10 @@ type Synthetic struct {
 	attributeLength    uint32
 }
 
-func NewSynthetic() *Synthetic {
-	return &Synthetic{}
+func NewSynthetic(nameIndex uint16) *Synthetic {
+	return &Synthetic{attributeNameIndex: nameIndex}
 }
 
 func (self *Synthetic) readInfo(reader *reader.ClassReader) {
-
+	self.attributeLength = reader.ReadUInt32()
 }

@@ -7,10 +7,10 @@ type Deprecated struct {
 	attributeLength    uint32
 }
 
-func NewDeprecated() *Deprecated {
-	return &Deprecated{}
+func NewDeprecated(nameIndex uint16) *Deprecated {
+	return &Deprecated{attributeNameIndex: nameIndex}
 }
 
 func (self *Deprecated) readInfo(reader *reader.ClassReader) {
-
+	self.attributeLength = reader.ReadUInt32()
 }

@@ -27,27 +27,29 @@ func NewAttributeInfo(nameIndex uint16, name string, pool []constantpool.Constan
 	case "Code":
 		return NewCode(pool, nameIndex)
 	case "Exceptions":
-		return NewExceptions()
+		return NewExceptions(nameIndex)
 	case "LineNumberTable":
 		return NewLineNumberTable(nameIndex)
 	case "LocalVariableTable":
 		return NewLocalVariableTable(nameIndex)
+	case "LocalVariableTypeTable":
+		return NewLocalVariableTypeTable(nameIndex)
 	case "SourceFile":
 		return NewSourceFile(nameIndex)
 	case "ConstantValue":
 		return NewConstantValue(nameIndex)
 	case "InnerClasses":
-		return NewInnerClasses()
+		return NewInnerClasses(nameIndex)
 	case "Deprecated":
-		return NewDeprecated()
+		return NewDeprecated(nameIndex)
 	case "Synthetic":
-		return NewSynthetic()
+		return NewSynthetic(nameIndex)
 	case "StackMapTable":
-		return NewStackMapTable()
+		return NewStackMapTable(nameIndex)
 	case "Signature":
-		return NewSignature()
+		return NewSignature(nameIndex)
 	case "BootstrapMethods":
-		return NewBootstrapMethods()
+		return NewBootstrapMethods(nameIndex)
 	default:
 		panic("No Such Attribute: " + name)
 	}
