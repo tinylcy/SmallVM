@@ -15,3 +15,7 @@ func (self *ConstantInvokeDynamicInfo) readInfo(reader *reader.ClassReader) {
 	self.bootstrapMethodAttrIndex = reader.ReadUInt16()
 	self.nameAndTypeIndex = reader.ReadUInt16()
 }
+
+func (self *ConstantInvokeDynamicInfo) String() string {
+	return ""
+}

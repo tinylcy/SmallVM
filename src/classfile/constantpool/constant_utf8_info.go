@@ -1,7 +1,6 @@
 package constantpool
 
 import "SmallVM/classfile/reader"
-import "fmt"
 
 type ConstantUtf8Info struct {
 	val string
@@ -15,7 +14,7 @@ func (self *ConstantUtf8Info) readInfo(reader *reader.ClassReader) {
 	length := reader.ReadUInt16()
 	bytes := reader.ReadBytes(uint32(length))
 	self.val = string(bytes)
-	fmt.Printf("ConstantUtf8Info: %s\n", self.val)
+	// fmt.Printf("ConstantUtf8Info: %s\n", self.val)
 }
 
 // Convert MUTF-8 byte slice to UTF-8 byte array
@@ -26,9 +25,7 @@ func (self *ConstantUtf8Info) mutf8ToString(bytes []byte) string {
 			nilCount++
 		}
 	}
-
 	convertedBytes := make([]byte, len(bytes)+nilCount)
-
 	for i, j := 0, 0; i < len(bytes); {
 		convertedBytes[j] = bytes[i]
 		if bytes[i] == 0 {
@@ -41,4 +38,8 @@ func (self *ConstantUtf8Info) mutf8ToString(bytes []byte) string {
 	}
 
 	return string(convertedBytes)
+}
+
+func (self *ConstantUtf8Info) String() string {
+	return self.val
 }

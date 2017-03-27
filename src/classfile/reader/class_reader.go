@@ -39,3 +39,7 @@ func (self *ClassReader) ReadBytes(n uint32) []byte {
 	self.data = self.data[n:]
 	return val
 }
+
+func (self *ClassReader) Size() int {
+	return len(self.data)
+}

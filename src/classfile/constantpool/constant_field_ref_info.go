@@ -15,3 +15,7 @@ func (self *ConstantFieldRefInfo) readInfo(reader *reader.ClassReader) {
 	self.classIndex = reader.ReadUInt16()
 	self.nameAndTypeIndex = reader.ReadUInt16()
 }
+
+func (self *ConstantFieldRefInfo) String() string {
+	return ""
+}

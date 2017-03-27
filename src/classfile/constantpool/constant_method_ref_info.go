@@ -15,3 +15,7 @@ func (self *ConstantMethodRefInfo) readInfo(reader *reader.ClassReader) {
 	self.classIndex = reader.ReadUInt16()
 	self.nameAndTypeIndex = reader.ReadUInt16()
 }
+
+func (self *ConstantMethodRefInfo) String() string {
+	return ""
+}

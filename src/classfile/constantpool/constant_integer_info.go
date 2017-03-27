@@ -14,3 +14,7 @@ func (self *ConstantIntegerInfo) readInfo(reader *reader.ClassReader) {
 	bytes := reader.ReadUInt32()
 	self.val = int32(bytes)
 }
+
+func (self *ConstantIntegerInfo) String() string {
+	return ""
+}

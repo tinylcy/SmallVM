@@ -13,3 +13,7 @@ func NewConstantClassInfo() *ConstantClassInfo {
 func (self *ConstantClassInfo) readInfo(reader *reader.ClassReader) {
 	self.index = reader.ReadUInt16()
 }
+
+func (self *ConstantClassInfo) String() string {
+	return ""
+}

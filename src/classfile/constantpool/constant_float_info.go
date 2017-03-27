@@ -15,3 +15,7 @@ func (self *ConstantFloatInfo) readInfo(reader *reader.ClassReader) {
 	bytes := reader.ReadUInt32()
 	self.val = math.Float32frombits(bytes)
 }
+
+func (self *ConstantFloatInfo) String() string {
+	return ""
+}

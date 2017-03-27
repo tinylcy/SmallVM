@@ -13,3 +13,7 @@ func NewConstantMethodTypeInfo() *ConstantMethodTypeInfo {
 func (self *ConstantMethodTypeInfo) readInfo(reader *reader.ClassReader) {
 	self.descriptorIndex = reader.ReadUInt16()
 }
+
+func (self *ConstantMethodTypeInfo) String() string {
+	return ""
+}

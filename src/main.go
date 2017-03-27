@@ -10,10 +10,11 @@ import "fmt"
 func main() {
 	cmd := cmd.ParseCmdLine()
 	cp := classpath.Parse(cmd)
-	data, _ := cp.ReadClass("java.lang.Object")
+	data, _ := cp.ReadClass("./tests/TestClass")
 	fmt.Println(data)
 
 	reader := reader.NewClassReader(data)
 	cf := classfile.NewClassFile()
 	cf.Parse(reader)
+
 }
