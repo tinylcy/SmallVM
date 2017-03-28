@@ -1,7 +1,9 @@
 package attribute
 
-import "SmallVM/classfile/reader"
-import "SmallVM/classfile/constantpool"
+import (
+	"SmallVM/classfile/constantpool"
+	"SmallVM/classfile/reader"
+)
 
 type Code struct {
 	pool                 []constantpool.ConstantInfo

@@ -1,9 +1,14 @@
 package classfile
 
-import "SmallVM/classfile/reader"
-import "SmallVM/classfile/constantpool"
-import "SmallVM/classfile/attribute"
-import "fmt"
+import (
+	"SmallVM/classfile/accessflags"
+	"SmallVM/classfile/attribute"
+	"SmallVM/classfile/constantpool"
+	"SmallVM/classfile/reader"
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 type ClassFile struct {
 	magic             uint32
@@ -49,44 +54,40 @@ func (self *ClassFile) Parse(reader *reader.ClassReader) (*ClassFile, error) {
 	self.ReadMinorVersion(reader)
 	self.ReadMajorVersion(reader)
 
-	self.ReadConstantPoolCount(reader)
 	// parse constant pool info
+	self.ReadConstantPoolCount(reader)
 	self.constantPool = constantpool.Parse(reader, self.constantPoolCount)
-	fmt.Printf("constantpool length = %d\n", self.constantPoolCount)
 
 	self.ReadAccessFlags(reader)
 	self.ReadThisClass(reader)
 	self.ReadSuperClass(reader)
 
 	self.ReadInterfacesCount(reader)
-	fmt.Printf("interfacesCount = %d\n", self.interfacesCount)
 	self.ReadInterfaces(reader, self.interfacesCount)
 
+	// parse fields info
 	self.ReadFieldsCount(reader)
-	fmt.Printf("fieldsCount = %d\n", self.fieldsCount)
 	self.ParseFields(reader, self.fieldsCount)
 
+	// parse methods info
 	self.ReadMethodsCount(reader)
-	fmt.Printf("methodsCount = %d\n", self.methodsCount)
 	self.ParseMethods(reader, self.methodsCount)
 
+	// parse attributes info
 	self.ReadAttributesCount(reader)
-	fmt.Printf("class attributes count = %d\n", self.attributesCount)
 	self.ParseClassAttributes(reader, self.attributesCount)
 
 	return self, nil
 }
 
 func (self *ClassFile) ParseFields(reader *reader.ClassReader, count uint16) (*ClassFile, error) {
-	self.fields = make([]FieldInfo, count)
+	self.fields = make([]FieldInfo, 0)
 	for index := 0; index < int(count); index++ {
 		field := FieldInfo{}
 		field.accessFlags = reader.ReadUInt16()
 		field.nameIndex = reader.ReadUInt16()
-		fmt.Printf("field nameIndex = %d\n", field.nameIndex)
 		field.descriptorIndex = reader.ReadUInt16()
 		field.attributesCount = reader.ReadUInt16()
-		fmt.Printf("field attributes count = %d\n", field.attributesCount)
 		field.attributes = attribute.ReadAttributes(reader, self.constantPool, field.attributesCount)
 		self.fields = append(self.fields, field)
 	}
@@ -99,14 +100,60 @@ func (self *ClassFile) ParseMethods(reader *reader.ClassReader, count uint16) (*
 		method := MethodInfo{}
 		method.accessFlags = reader.ReadUInt16()
 		method.nameIndex = reader.ReadUInt16()
-		fmt.Printf("method nameIndex = %d\n", method.nameIndex)
 		method.descriptorIndex = reader.ReadUInt16()
 		method.attributesCount = reader.ReadUInt16()
-		fmt.Printf("method attributes count = %d\n", method.attributesCount)
 		method.attributes = attribute.ReadAttributes(reader, self.constantPool, method.attributesCount)
 		self.methods = append(self.methods, method)
 	}
 	return self, nil
+}
+
+// Print class structure
+func (self *ClassFile) ViewClass() {
+	fmt.Printf("magic: %x\n", self.magic)
+	fmt.Printf("minor version: %d\n", self.minorVersion)
+	fmt.Printf("major version: %d\n", self.majorVersion)
+	fmt.Printf("constant pool count: %d\n", self.constantPoolCount)
+	fmt.Printf("access flags: %s\n", self.AccessFlags(self.accessFlags))
+	fmt.Printf("this class: %s\n", self.ThisClass())
+	fmt.Printf("super class: %s\n", self.SuperClass())
+	fmt.Printf("interfaces: %s\n", self.Interfaces())
+	fmt.Printf("fields count: %d\n", self.fieldsCount)
+	self.ViewFields()
+	fmt.Printf("method count: %d\n", self.methodsCount)
+	self.ViewMethods()
+}
+
+// Print class fields info
+func (self *ClassFile) ViewFields() {
+	fields := self.fields
+	for _, field := range fields {
+		fmt.Println()
+		fmt.Printf("field name: %s\n", self.getUtf8Value(field.nameIndex))
+		fmt.Printf("access flags: %s\n", accessflags.GetFieldAccessFlags(field.accessFlags))
+		fmt.Printf("descriptor index: %s\n", self.getUtf8Value(field.descriptorIndex))
+	}
+	fmt.Println()
+}
+
+// Print class methods info
+func (self *ClassFile) ViewMethods() {
+	methods := self.methods
+	for _, method := range methods {
+		fmt.Println()
+		fmt.Printf("method name: %s\n", self.getUtf8Value(method.nameIndex))
+		fmt.Printf("access flags: %s\n", accessflags.GetMethodAccessFlags(method.accessFlags))
+		fmt.Printf("descriptor index: %s\n", self.getUtf8Value(method.descriptorIndex))
+	}
+}
+
+// Get constantpool's CONSTANT_Utf8_info value.
+func (self *ClassFile) getUtf8Value(index uint16) string {
+	if index <= 0 || index >= self.constantPoolCount {
+		panic("GetUtf8Value: Index Out of Bounds")
+	}
+	val := self.constantPool[index-1].String()
+	return val
 }
 
 // Parse class level attributes.
@@ -167,8 +214,9 @@ func (self *ClassFile) ReadInterfacesCount(reader *reader.ClassReader) (*ClassFi
 }
 
 func (self *ClassFile) ReadInterfaces(reader *reader.ClassReader, count uint16) (*ClassFile, error) {
-	self.interfaces = make([]uint16, count)
-	for index := 0; index < int(count); index++ {
+	var index uint16
+	self.interfaces = make([]uint16, 0)
+	for index = 0; index < count; index++ {
 		self.interfaces = append(self.interfaces, reader.ReadUInt16())
 	}
 	return self, nil
@@ -196,10 +244,26 @@ func (self *ClassFile) Magic() uint32 {
 	return self.magic
 }
 
-func (self *ClassFile) InterfacesCount() uint16 {
-	return self.interfacesCount
+func (self *ClassFile) AccessFlags(flags uint16) string {
+	return accessflags.GetClassAccessFlags(flags)
 }
 
-func (self *ClassFile) Interfaces() []uint16 {
-	return self.interfaces
+func (self *ClassFile) ThisClass() string {
+	index, _ := strconv.Atoi(self.getUtf8Value(self.thisClass))
+	return self.getUtf8Value(uint16(index))
+}
+
+func (self *ClassFile) SuperClass() string {
+	index, _ := strconv.Atoi(self.getUtf8Value(self.superClass))
+	return self.getUtf8Value(uint16(index))
+}
+
+func (self *ClassFile) Interfaces() string {
+	var index int
+	interfaces := make([]string, 0)
+	for index = 0; index < len(self.interfaces); index++ {
+		interIndex, _ := strconv.Atoi(self.getUtf8Value(self.interfaces[index]))
+		interfaces = append(interfaces, self.getUtf8Value(uint16(interIndex)))
+	}
+	return strings.Join(interfaces, ", ")
 }

@@ -26,18 +26,18 @@ type ConstantInfo interface {
 
 // Parse constant pool, return a slice of contant info.
 func Parse(reader *reader.ClassReader, constantPoolCount uint16) []ConstantInfo {
+	var index uint16
 	infoList := make([]ConstantInfo, 0)
-	for index := 1; index < int(constantPoolCount); index++ {
+	for index = 1; index < constantPoolCount; index++ {
 		tag := reader.ReadUInt8()
-		if tag == 0 {
-			reader.ReadUInt8() // read one byte when tag == 0
-			continue           // tag == 0 means don't refer to any constant
+		if tag == CONSTANT_LONG_INFO || tag == CONSTANT_DOUBLE_INFO {
+			infoList = append(infoList, nil) // append a nil elemtent to infoList as a plcaeholder
+			index++
 		}
 		info := NewConstantInfo(tag)
 		info.readInfo(reader)
 		infoList = append(infoList, info)
 	}
-	// fmt.Printf("infoList length = %d\n", len(infoList))
 	return infoList
 }
 

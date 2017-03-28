@@ -1,8 +1,9 @@
 package attribute
 
-import "SmallVM/classfile/reader"
-import "SmallVM/classfile/constantpool"
-import "fmt"
+import (
+	"SmallVM/classfile/constantpool"
+	"SmallVM/classfile/reader"
+)
 
 type AttributeInfo interface {
 	readInfo(reader *reader.ClassReader)
@@ -13,7 +14,6 @@ func ReadAttributes(reader *reader.ClassReader, pool []constantpool.ConstantInfo
 	for index := 0; index < int(count); index++ {
 		nameIndex := reader.ReadUInt16()
 		name := pool[nameIndex-1].String()
-		fmt.Printf("attribute name = %s\n", name)
 		attribute := NewAttributeInfo(nameIndex, name, pool)
 		attribute.readInfo(reader)
 		attributes = append(attributes, attribute)
@@ -44,14 +44,13 @@ func NewAttributeInfo(nameIndex uint16, name string, pool []constantpool.Constan
 		return NewDeprecated(nameIndex)
 	case "Synthetic":
 		return NewSynthetic(nameIndex)
-	case "StackMapTable":
-		return NewStackMapTable(nameIndex)
 	case "Signature":
 		return NewSignature(nameIndex)
 	case "BootstrapMethods":
 		return NewBootstrapMethods(nameIndex)
-	default:
-		panic("No Such Attribute: " + name)
+	default: // case "StackMapTable"
+		// fmt.Printf("Get Unparsed Attribute: name = %s\n", name)
+		return NewUnparsed(nameIndex)
 	}
 
 }

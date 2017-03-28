@@ -1,7 +1,9 @@
 package constantpool
 
-import "SmallVM/classfile/reader"
-import "math"
+import (
+	"SmallVM/classfile/reader"
+	"math"
+)
 
 type ConstantFloatInfo struct {
 	val float32

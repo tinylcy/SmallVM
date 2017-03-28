@@ -1,6 +1,9 @@
 package constantpool
 
-import "SmallVM/classfile/reader"
+import (
+	"SmallVM/classfile/reader"
+	"strconv"
+)
 
 type ConstantClassInfo struct {
 	index uint16
@@ -15,5 +18,5 @@ func (self *ConstantClassInfo) readInfo(reader *reader.ClassReader) {
 }
 
 func (self *ConstantClassInfo) String() string {
-	return ""
+	return strconv.Itoa(int(self.index))
 }
