@@ -6,7 +6,13 @@ import (
 	//	"SmallVM/classfile/reader"
 	//	"SmallVM/classpath"
 	//	"SmallVM/cmd"
-	"SmallVM/rtarea"
+	//  "SmallVM/rtarea"
+	"SmallVM/instructions/constant"
+	"SmallVM/instructions/conversion"
+	"SmallVM/instructions/load"
+	"SmallVM/instructions/math"
+	"SmallVM/instructions/stack"
+	"SmallVM/instructions/store"
 	"fmt"
 )
 
@@ -20,19 +26,41 @@ func main() {
 	//	cf.ViewClass()
 
 	// Test Local Variables
-	localVars := rtarea.NewLocalVariables(10)
-	localVars.SetInt(2, 24)
-	fmt.Println(*localVars)
-	localVars.SetLong(3, 22337203685477)
-	fmt.Println(*localVars)
-	fmt.Println(localVars.GetLong(3))
-	localVars.SetDouble(6, 22337203685477.7)
-	fmt.Println(*localVars)
-	fmt.Println(localVars.GetDouble(6))
+	//	localVars := rtarea.NewLocalVariables(10)
+	//	localVars.SetInt(2, 24)
+	//	fmt.Println(*localVars)
+	//	localVars.SetLong(3, 22337203685477)
+	//	fmt.Println(*localVars)
+	//	fmt.Println(localVars.GetLong(3))
+	//	localVars.SetDouble(6, 22337203685477.7)
+	//	fmt.Println(*localVars)
+	//	fmt.Println(localVars.GetDouble(6))
 
 	// Test Operand Stack
-	operandStack := rtarea.NewOperandStack(10)
-	operandStack.PushLong(int64(22337203685477))
-	fmt.Println(operandStack)
-	fmt.Println(int64(operandStack.PopLong()))
+	//	operandStack := rtarea.NewOperandStack(10)
+	//	operandStack.PushLong(int64(22337203685477))
+	//	fmt.Println(operandStack)
+	//	fmt.Println(int64(operandStack.PopLong()))
+
+	// Test byte code instructions
+	dconst_0 := constant.DCONST_0{}
+	fmt.Println(dconst_0)
+	iload := load.ILOAD{}
+	fmt.Println(iload)
+	load := load.ALOAD_0{}
+	fmt.Println(load)
+	dup := stack.DUP{}
+	fmt.Println(dup)
+	store := store.ASTORE_1{}
+	fmt.Println(store)
+	add := math.DADD{}
+	fmt.Println(add)
+	sub := math.DSUB{}
+	fmt.Println(sub)
+	lxor := math.LXOR{}
+	fmt.Println(lxor)
+	iinc := math.IINC{}
+	fmt.Println(iinc)
+	d2f := conversion.D2F{}
+	fmt.Println(d2f)
 }

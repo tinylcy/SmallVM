@@ -77,3 +77,24 @@ func (self *OperandStack) PopReference() *Object {
 	self.slots[self.top].Ref = nil
 	return value
 }
+
+// Used to stack byte code instructions
+func (self *OperandStack) PushSlot(slot Slot) {
+	self.slots[self.top] = slot
+	self.top++
+}
+
+// Used to stack byte code instructions
+func (self *OperandStack) PopSlot() Slot {
+	self.top--
+	value := self.slots[self.top]
+	self.slots[self.top].Num = 0
+	self.slots[self.top].Ref = nil
+	return value
+}
+
+// Used to stack byte code instructions
+func (self *OperandStack) PeekSlot() Slot {
+	value := self.slots[self.top-1]
+	return value
+}
