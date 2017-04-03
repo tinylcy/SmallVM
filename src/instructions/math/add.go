@@ -24,7 +24,7 @@ type DADD struct {
 func (self *IADD) FetchOperands(reader *common.ByteCodeReader) {
 }
 
-func (self *IADD) Execute(frame rtarea.Frame) {
+func (self *IADD) Execute(frame *rtarea.Frame) {
 	stack := frame.OperandStack()
 	value1 := stack.PopInt()
 	value2 := stack.PopInt()

@@ -30,7 +30,7 @@ func NewCode(cp []constantpool.ConstantInfo, nameIndex uint16) *Code {
 	return &Code{pool: cp, attributeNameIndex: nameIndex}
 }
 
-func (self Code) readInfo(reader *reader.ClassReader) {
+func (self *Code) readInfo(reader *reader.ClassReader) {
 	self.attributeLength = reader.ReadUInt32()
 	self.maxStack = reader.ReadUInt16()
 	self.maxLocals = reader.ReadUInt16()
@@ -53,4 +53,16 @@ func readExceptionTable(reader *reader.ClassReader, length uint16) []ExceptionIn
 		infoList = append(infoList, info)
 	}
 	return infoList
+}
+
+func (self *Code) MaxStack() uint16 {
+	return self.maxStack
+}
+
+func (self *Code) MaxLocals() uint16 {
+	return self.maxLocals
+}
+
+func (self *Code) Code() []byte {
+	return self.code
 }

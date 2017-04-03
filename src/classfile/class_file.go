@@ -129,9 +129,9 @@ func (self *ClassFile) ViewFields() {
 	fields := self.fields
 	for _, field := range fields {
 		fmt.Println()
-		fmt.Printf("field name: %s\n", self.getUtf8Value(field.nameIndex))
+		fmt.Printf("field name: %s\n", self.GetUtf8Value(field.nameIndex))
 		fmt.Printf("access flags: %s\n", accessflags.GetFieldAccessFlags(field.accessFlags))
-		fmt.Printf("descriptor index: %s\n", self.getUtf8Value(field.descriptorIndex))
+		fmt.Printf("descriptor index: %s\n", self.GetUtf8Value(field.descriptorIndex))
 	}
 	fmt.Println()
 }
@@ -141,14 +141,14 @@ func (self *ClassFile) ViewMethods() {
 	methods := self.methods
 	for _, method := range methods {
 		fmt.Println()
-		fmt.Printf("method name: %s\n", self.getUtf8Value(method.nameIndex))
+		fmt.Printf("method name: %s\n", self.GetUtf8Value(method.nameIndex))
 		fmt.Printf("access flags: %s\n", accessflags.GetMethodAccessFlags(method.accessFlags))
-		fmt.Printf("descriptor index: %s\n", self.getUtf8Value(method.descriptorIndex))
+		fmt.Printf("descriptor index: %s\n", self.GetUtf8Value(method.descriptorIndex))
 	}
 }
 
 // Get constantpool's CONSTANT_Utf8_info value.
-func (self *ClassFile) getUtf8Value(index uint16) string {
+func (self *ClassFile) GetUtf8Value(index uint16) string {
 	if index <= 0 || index >= self.constantPoolCount {
 		panic("GetUtf8Value: Index Out of Bounds")
 	}
@@ -249,21 +249,42 @@ func (self *ClassFile) AccessFlags(flags uint16) string {
 }
 
 func (self *ClassFile) ThisClass() string {
-	index, _ := strconv.Atoi(self.getUtf8Value(self.thisClass))
-	return self.getUtf8Value(uint16(index))
+	index, _ := strconv.Atoi(self.GetUtf8Value(self.thisClass))
+	return self.GetUtf8Value(uint16(index))
 }
 
 func (self *ClassFile) SuperClass() string {
-	index, _ := strconv.Atoi(self.getUtf8Value(self.superClass))
-	return self.getUtf8Value(uint16(index))
+	index, _ := strconv.Atoi(self.GetUtf8Value(self.superClass))
+	return self.GetUtf8Value(uint16(index))
 }
 
 func (self *ClassFile) Interfaces() string {
 	var index int
 	interfaces := make([]string, 0)
 	for index = 0; index < len(self.interfaces); index++ {
-		interIndex, _ := strconv.Atoi(self.getUtf8Value(self.interfaces[index]))
-		interfaces = append(interfaces, self.getUtf8Value(uint16(interIndex)))
+		interIndex, _ := strconv.Atoi(self.GetUtf8Value(self.interfaces[index]))
+		interfaces = append(interfaces, self.GetUtf8Value(uint16(interIndex)))
 	}
 	return strings.Join(interfaces, ", ")
+}
+
+func (self *ClassFile) MethodName(nameIndex uint16) string {
+	return self.GetUtf8Value(nameIndex)
+}
+
+// Get class's main method.
+func (self *ClassFile) MainMethod() *MethodInfo {
+	methods := self.methods
+	for _, method := range methods {
+		methodName := self.GetUtf8Value(method.nameIndex)
+		descriptor := self.GetUtf8Value(method.descriptorIndex)
+		if methodName == "main" && descriptor == "([Ljava/lang/String;)V" {
+			return &method
+		}
+	}
+	return nil
+}
+
+func (self *MethodInfo) Attributes() []attribute.AttributeInfo {
+	return self.attributes
 }

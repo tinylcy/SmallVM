@@ -1,20 +1,23 @@
 package common
 
+import "SmallVM/rtarea"
+
 type ByteCodeReader struct {
-	code []byte
-	pc   int
+	code   []byte
+	thread *rtarea.Thread
 }
 
-func NewByteCodeReader(code []byte, pc int) *ByteCodeReader {
+func NewByteCodeReader(code []byte, thread *rtarea.Thread) *ByteCodeReader {
 	reader := &ByteCodeReader{}
 	reader.code = code
-	reader.pc = pc
+	reader.thread = thread
 	return reader
 }
 
 func (self *ByteCodeReader) ReadUInt8() uint8 {
-	value := self.code[self.pc]
-	self.pc++
+	value := self.code[self.thread.PC()]
+	pc := self.thread.PC()
+	self.thread.SetPC(pc + 1)
 	return uint8(value)
 }
 
@@ -47,4 +50,17 @@ func (self *ByteCodeReader) ReadUInt32() uint32 {
 func (self *ByteCodeReader) ReadInt32() int32 {
 	value := int32(self.ReadUInt32())
 	return value
+}
+
+// tableswitch & lookupswitch
+func (self *ByteCodeReader) SkipPadding() {
+	for self.thread.PC()%4 != 0 {
+		self.ReadInt8()
+	}
+}
+
+// Get current pc value: after reader read bytes, pc will be updated,
+// therefore CurrentPC() should be invoked before ReadXXX().
+func (self *ByteCodeReader) CurrentPC() int {
+	return self.thread.PC()
 }

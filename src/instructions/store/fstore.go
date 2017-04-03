@@ -30,6 +30,10 @@ func (self *FSTORE) Execute(frame *rtarea.Frame) {
 	frame.LocalVariables().SetFloat(self.index, value)
 }
 
+func (self *FSTORE) SetIndex(index uint) {
+	self.index = index
+}
+
 func (self *FSTORE_0) FetchOperands(reader *common.ByteCodeReader) {
 }
 

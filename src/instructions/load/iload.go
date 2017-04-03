@@ -31,6 +31,10 @@ func (self *ILOAD) Execute(frame *rtarea.Frame) {
 	frame.OperandStack().PushInt(value)
 }
 
+func (self *ILOAD) SetIndex(index uint) {
+	self.index = index
+}
+
 func (self *ILOAD_0) FetchOperands(reader *common.ByteCodeReader) {
 }
 

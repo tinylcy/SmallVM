@@ -29,7 +29,7 @@ type IXOR struct {
 type LXOR struct {
 }
 
-func (self *IAND) FecthOperands(reader *common.ByteCodeReader) {
+func (self *IAND) FetchOperands(reader *common.ByteCodeReader) {
 }
 
 // Computes the bitwise and of value1 and value2 (which must be ints).
@@ -41,7 +41,7 @@ func (self *IAND) Execute(frame *rtarea.Frame) {
 	stack.PushInt(result)
 }
 
-func (self *LAND) FecthOperands(reader *common.ByteCodeReader) {
+func (self *LAND) FetchOperands(reader *common.ByteCodeReader) {
 }
 
 // Pops two long integers off the stack. Computes the bitwise and of value1 and value2.
@@ -53,7 +53,7 @@ func (self *LAND) Execute(frame *rtarea.Frame) {
 	stack.PushLong(result)
 }
 
-func (self *IOR) FecthOperands(reader *common.ByteCodeReader) {
+func (self *IOR) FetchOperands(reader *common.ByteCodeReader) {
 }
 
 // Computes the bitwise or of value1 and value2 (which must be ints).
@@ -65,7 +65,7 @@ func (self *IOR) Execute(frame *rtarea.Frame) {
 	stack.PushInt(result)
 }
 
-func (self *LOR) FecthOperands(reader *common.ByteCodeReader) {
+func (self *LOR) FetchOperands(reader *common.ByteCodeReader) {
 }
 
 // Computes the bitwise or of value1 and value2.
@@ -77,7 +77,7 @@ func (self *LOR) Execute(frame *rtarea.Frame) {
 	stack.PushLong(result)
 }
 
-func (self *IXOR) FecthOperands(reader *common.ByteCodeReader) {
+func (self *IXOR) FetchOperands(reader *common.ByteCodeReader) {
 }
 
 // Computes the bitwise exclusive or of value1 and value2.
@@ -89,7 +89,7 @@ func (self *IXOR) Execute(frame *rtarea.Frame) {
 	stack.PushInt(result)
 }
 
-func (self *LXOR) FecthOperands(reader *common.ByteCodeReader) {
+func (self *LXOR) FetchOperands(reader *common.ByteCodeReader) {
 }
 
 // Computes the bitwise exclusive or of value1 and value2.

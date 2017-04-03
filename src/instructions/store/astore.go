@@ -30,6 +30,10 @@ func (self *ASTORE) Execute(frame *rtarea.Frame) {
 	frame.LocalVariables().SetReference(self.index, value)
 }
 
+func (self *ASTORE) SetIndex(index uint) {
+	self.index = index
+}
+
 func (self *ASTORE_0) FetchOperands(reader *common.ByteCodeReader) {
 }
 

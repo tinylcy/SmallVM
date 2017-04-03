@@ -21,13 +21,17 @@ type DLOAD_2 struct {
 type DLOAD_3 struct {
 }
 
-func (self *DLOAD) DLOADDLOADFetchOperands(reader *common.ByteCodeReader) {
+func (self *DLOAD) FetchOperands(reader *common.ByteCodeReader) {
 	self.index = uint(reader.ReadUInt8())
 }
 
 func (self *DLOAD) Execute(frame *rtarea.Frame) {
 	value := frame.LocalVariables().GetDouble(self.index)
 	frame.OperandStack().PushDouble(value)
+}
+
+func (self *DLOAD) SetIndex(index uint) {
+	self.index = index
 }
 
 func (self *DLOAD_0) FetchOperands(reader *common.ByteCodeReader) {

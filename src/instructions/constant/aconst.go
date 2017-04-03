@@ -11,6 +11,6 @@ type ACONST_NULL struct {
 func (self *ACONST_NULL) FetchOperands(reader *common.ByteCodeReader) {
 }
 
-func (self *ACONST_NULL) Execute(frame rtarea.Frame) {
+func (self *ACONST_NULL) Execute(frame *rtarea.Frame) {
 	frame.OperandStack().PushReference(nil)
 }

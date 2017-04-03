@@ -30,6 +30,10 @@ func (self *FLOAD) Execute(frame *rtarea.Frame) {
 	frame.OperandStack().PushFloat(value)
 }
 
+func (self *FLOAD) SetIndex(index uint) {
+	self.index = index
+}
+
 func (self *FLOAD_0) FetchOperands(reader *common.ByteCodeReader) {
 }
 

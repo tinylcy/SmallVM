@@ -30,6 +30,10 @@ func (self *ISTORE) Execute(frame *rtarea.Frame) {
 	frame.LocalVariables().SetInt(self.index, value)
 }
 
+func (self *ISTORE) SetIndex(index uint) {
+	self.index = index
+}
+
 func (self *ISTORE_0) FetchOperands(reader *common.ByteCodeReader) {
 }
 

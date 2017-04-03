@@ -30,6 +30,9 @@ func (self *ALOAD) Execute(frame *rtarea.Frame) {
 	frame.OperandStack().PushReference(value)
 }
 
+func (self *ALOAD) SetIndex(index uint) {
+	self.index = index
+}
 func (self *ALOAD_0) FetchOperands(reader *common.ByteCodeReader) {
 }
 

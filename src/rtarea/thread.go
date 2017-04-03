@@ -9,6 +9,7 @@ type Thread struct {
 
 func NewThread() *Thread {
 	thread := &Thread{}
+	thread.pc = 0
 	thread.stack = NewStack(MAX_FRAME_DEPTH)
 	return thread
 }

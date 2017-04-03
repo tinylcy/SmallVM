@@ -22,3 +22,11 @@ func (self *IINC) Execute(frame *rtarea.Frame) {
 	value := localVariabls.GetInt(self.index)
 	localVariabls.SetInt(self.index, value+self.increment)
 }
+
+func (self *IINC) SetIndex(index uint) {
+	self.index = index
+}
+
+func (self *IINC) SetIncrement(increment int32) {
+	self.increment = increment
+}
